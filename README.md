@@ -6,6 +6,8 @@ The project combines a **Next.js frontend** with a **Node.js/Express backend** t
 
 It includes powerful learning features such as **Voice Chat**, **Voice Overview**, **Podcast Overview**, **Video Overview**, AI summaries, flashcards, quizzes, contextual chat, progress tracking, and subscription management for a complete SaaS learning workflow.
 
+This root repository uses **Git submodules** for the frontend and backend, so the `frontend` and `server` folders must be initialized after cloning.
+
 ---
 
 ## Table of Contents
@@ -15,6 +17,7 @@ It includes powerful learning features such as **Voice Chat**, **Voice Overview*
 - [Core Features](#core-features)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
+- [Repositories](#repositories)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
 - [Environment Variables](#environment-variables)
@@ -62,6 +65,7 @@ The platform is designed for modular growth and separates UI concerns from API/b
 ## Core Features
 
 ### Learning & AI
+
 - Document upload and retrieval
 - AI-powered summary generation
 - Flashcard generation and review actions (including starred cards)
@@ -71,6 +75,7 @@ The platform is designed for modular growth and separates UI concerns from API/b
 - Voice overview, podcast overview, and video overview generation
 
 ### User & Security
+
 - Email/password authentication
 - Google OAuth login
 - JWT-based protected APIs
@@ -78,6 +83,7 @@ The platform is designed for modular growth and separates UI concerns from API/b
 - Secure middleware stack: Helmet, HPP, CORS controls, and rate limiting
 
 ### Billing
+
 - Plan-based subscriptions (free/plus/pro/premium)
 - Paddle checkout and upgrade preview flows
 - Paddle webhook handling for subscription lifecycle events
@@ -87,6 +93,7 @@ The platform is designed for modular growth and separates UI concerns from API/b
 ## Tech Stack
 
 ### Frontend
+
 - Next.js 16 (App Router)
 - React 19 + TypeScript
 - Tailwind CSS 4
@@ -96,6 +103,7 @@ The platform is designed for modular growth and separates UI concerns from API/b
 - React Hook Form
 
 ### Backend
+
 - Node.js + Express 5
 - MongoDB + Mongoose
 - JWT + Passport (Google OAuth strategy)
@@ -104,6 +112,7 @@ The platform is designed for modular growth and separates UI concerns from API/b
 - Multer + Cloudinary (file/media handling)
 
 ### AI & Media Integrations
+
 - Google Gemini (`@google/genai`)
 - ElevenLabs (voice generation)
 - Vapi (voice workflow integration)
@@ -111,6 +120,7 @@ The platform is designed for modular growth and separates UI concerns from API/b
 - FFmpeg-based media processing
 
 ### Payments
+
 - Paddle (client + server SDKs)
 
 ---
@@ -122,16 +132,30 @@ The platform is designed for modular growth and separates UI concerns from API/b
 - **Communication**: Frontend calls backend REST APIs using `NEXT_PUBLIC_API_URL`.
 
 Default local ports typically used:
+
 - Frontend: `3000`
 - Backend: `8080` (recommended via `PORT` to avoid conflicts)
+
+---
+
+## Repositories
+
+This project is split into three repositories:
+
+- **Root repository**: project overview, shared docs, and Git submodule references
+- **Frontend repository**: [frontend](https://github.com/m-rayan-hassan/AI-Learning-App-Frontend-)
+- **Backend repository**: [server](https://github.com/m-rayan-hassan/AI-Learning-App-Backend-)
+
+If you clone only the root repo without submodules, `frontend` and `server` may appear empty or incomplete. That is expected until submodules are pulled.
 
 ---
 
 ## Project Structure
 
 ```text
-ai-learning-app/
-├─ frontend/
+CognivioAI/
+├─ .gitmodules               # Submodule definitions for frontend and server
+├─ frontend/                 # Git submodule → frontend repository
 │  ├─ src/
 │  │  ├─ app/                 # Next.js App Router pages/layouts
 │  │  ├─ components/          # Shared UI + feature tab components
@@ -142,7 +166,7 @@ ai-learning-app/
 │  ├─ public/                 # Static assets
 │  └─ package.json
 │
-├─ server/
+├─ server/                   # Git submodule → backend repository
 │  ├─ config/                 # Cloudinary and environment-based configs
 │  ├─ controllers/            # Request handlers (auth, AI, docs, billing, etc.)
 │  ├─ database/               # MongoDB connection logic
@@ -170,7 +194,22 @@ Install the following:
 - MongoDB instance (local or cloud)
 - FFmpeg installed and available in PATH (required by media utilities)
 
-### 2) Install dependencies
+### 2) Clone the repository correctly
+
+Clone with submodules so the `frontend` and `server` folders are populated:
+
+```bash
+git clone --recurse-submodules https://github.com/m-rayan-hassan/CognivioAI
+cd CognivioAI
+```
+
+If you already cloned the root repo and `frontend` / `server` are empty, run:
+
+```bash
+git submodule update --init --recursive
+```
+
+### 3) Install dependencies
 
 From the project root:
 
@@ -179,21 +218,21 @@ cd frontend && npm install
 cd ../server && npm install
 ```
 
-### 3) Configure environment variables
+### 4) Configure environment variables
 
 - Create `server/.env`
 - Create `frontend/.env.local`
 
 Use the templates below.
 
-### 4) Run the backend
+### 5) Run the backend
 
 ```bash
 cd server
 npm run dev
 ```
 
-### 5) Run the frontend
+### 6) Run the frontend
 
 ```bash
 cd frontend
@@ -301,6 +340,7 @@ Backend base path prefixes:
 
 ## Troubleshooting
 
+- **`frontend` and `server` are empty after clone**: run `git submodule update --init --recursive` or clone with `--recurse-submodules`.
 - **Port conflict on 3000**: run backend on `PORT=8080` and keep frontend on `3000`.
 - **CORS errors**: ensure frontend origin is included in backend `CLIENT_URL`.
 - **Auth failures**: verify JWT secret and Google client IDs on both client and server.
@@ -308,4 +348,3 @@ Backend base path prefixes:
 - **Database connection errors**: verify `MONGODB_URI` and network access.
 
 ---
-
