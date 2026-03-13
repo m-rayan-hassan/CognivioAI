@@ -1,0 +1,6 @@
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/m-rayan-hassan/AI-Learning-App-Frontend-
+[submodule "server"]
+	path = server
+	url = https://github.com/m-rayan-hassan/AI-Learning-App-Backend-
