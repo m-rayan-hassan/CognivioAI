@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="frontend/public/app_logo.png" alt="Cognivio AI Logo" width="200" />
+</div>
+
 # Cognivio AI
 
 A full-stack AI-powered learning platform that helps users convert documents into interactive study experiences.
@@ -38,7 +42,7 @@ Cognivio AI enables users to:
 - Ask contextual questions via chat
 - Generate audio/video learning overviews
 - Track learning progress from a dashboard
-- Manage paid subscriptions via Paddle
+- Manage paid subscriptions via Lemon Squeezy
 
 The platform is designed for modular growth and separates UI concerns from API/business logic.
 
@@ -58,7 +62,7 @@ The platform is designed for modular growth and separates UI concerns from API/b
 - **Concept Explainer**: Break down difficult topics into clear, learner-friendly explanations.
 - **Learning Dashboard**: Track study activity and progress across content and assessments.
 - **Authentication & Profiles**: Secure email/password + Google login with account management.
-- **Subscription Billing**: Paddle-powered plans, checkout, and subscription lifecycle handling.
+- **Subscription Billing**: Lemon Squeezy-powered plans, checkout, and subscription lifecycle handling.
 
 ---
 
@@ -85,8 +89,8 @@ The platform is designed for modular growth and separates UI concerns from API/b
 ### Billing
 
 - Plan-based subscriptions (free/plus/pro/premium)
-- Paddle checkout and upgrade preview flows
-- Paddle webhook handling for subscription lifecycle events
+- Lemon Squeezy checkout flows
+- Lemon Squeezy webhook handling for subscription lifecycle events
 
 ---
 
@@ -121,7 +125,7 @@ The platform is designed for modular growth and separates UI concerns from API/b
 
 ### Payments
 
-- Paddle (client + server SDKs)
+- Lemon Squeezy (server SDK)
 
 ---
 
@@ -273,12 +277,10 @@ CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
-# Paddle
-PADDLE_API_KEY=your_paddle_api_key
-PADDLE_WEBHOOK_SECRET=your_paddle_webhook_secret
-PADDLE_PRICE_ID_PLUS=pri_xxx
-PADDLE_PRICE_ID_PRO=pri_xxx
-PADDLE_PRICE_ID_PREMIUM=pri_xxx
+# Lemon Squeezy
+LEMONSQUEEZY_API_KEY=your_lemonsqueezy_api_key
+LEMONSQUEEZY_STORE_ID=your_lemonsqueezy_store_id
+LEMONSQUEEZY_WEBHOOK_SECRET=your_lemonsqueezy_webhook_secret
 
 # Optional
 MAX_CONCURRENT_RECORDINGS=1
@@ -291,8 +293,6 @@ NEXT_PUBLIC_API_URL=http://localhost:8080
 NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id
 NEXT_PUBLIC_VAPI_PUBLIC_KEY=your_vapi_public_key
 NEXT_PUBLIC_VAPI_WORKFLOW_ID=your_vapi_workflow_id
-NEXT_PUBLIC_PADDLE_ENV=sandbox
-NEXT_PUBLIC_PADDLE_CLIENT_TOKEN=your_paddle_client_token
 ```
 
 ---
@@ -324,7 +324,7 @@ Backend base path prefixes:
 - `/api/quizzes`
 - `/api/progress`
 - `/api/payments`
-- `/webhook` (Paddle webhook endpoint)
+- `/webhook` (Lemon Squeezy webhook endpoint)
 
 ---
 
@@ -332,9 +332,9 @@ Backend base path prefixes:
 
 - Set `NODE_ENV=production` in backend.
 - Configure strict, correct `CLIENT_URL` values for CORS.
-- Ensure all production keys (Paddle, OAuth, AI, Cloudinary, email) are set.
+- Ensure all production keys (Lemon Squeezy, OAuth, AI, Cloudinary, email) are set.
 - Configure persistent storage/strategy for uploaded media as needed.
-- Verify webhook endpoint accessibility for Paddle events.
+- Verify webhook endpoint accessibility for Lemon Squeezy events.
 
 ---
 
