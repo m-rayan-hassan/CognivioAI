@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="frontend/public/app_logo.png" alt="Cognivio AI" width="160" />
+  <img src="app_logo.png" alt="Cognivio AI" width="160" />
 
   # Cognivio AI
 
