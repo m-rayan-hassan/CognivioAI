@@ -8,9 +8,6 @@
   [![Status](https://img.shields.io/badge/Status-Live-brightgreen?style=flat-square)](#)
   [![Platform](https://img.shields.io/badge/Platform-Web-blue?style=flat-square)](#)
   [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)](#license)
-
-  [Visit Cognivio AI →](#) · [View Demo →](#)
-
 </div>
 
 ---
@@ -19,134 +16,160 @@
 
 Cognivio AI is a full-stack SaaS platform that transforms static documents into rich, interactive learning experiences — powered by AI. Upload any study material and instantly generate summaries, flashcards, quizzes, audio overviews, podcast-style explanations, video recaps, and more.
 
-Designed for students, self-learners, and professionals who want to absorb information faster and retain it longer.
-
 ---
 
-## ✨ Key Features
+## 🏗️ System Architecture
 
-| Feature | Description |
-|---|---|
-| **📄 Smart Document Library** | Upload, organize, and manage study materials in a centralized workspace |
-| **🧠 AI Summaries** | Instantly distill long documents into concise, structured summaries |
-| **🗂️ Flashcard Generation** | Auto-generate flashcards with smart review tracking and starred cards |
-| **📝 Quiz Engine** | AI-generated quizzes with scoring, detailed results, and performance insights |
-| **💬 Contextual AI Chat** | Ask follow-up questions and get document-aware, conversational answers |
-| **🎙️ Voice Chat** | Real-time voice conversations with an AI tutor that understands your documents |
-| **🔊 Voice Overview** | One-click audio summaries for on-the-go revision |
-| **🎧 Podcast Overview** | Long-form, podcast-style deep dives into your study material |
-| **🎬 Video Overview** | AI-generated video recaps combining visual and verbal explanations |
-| **💡 Concept Explainer** | Break down complex topics into clear, learner-friendly explanations |
-| **📊 Learning Dashboard** | Track study activity, progress, and performance across all content |
-| **💳 Subscription Billing** | Tiered plans (Free / Plus / Pro / Premium) with seamless checkout |
+Cognivio AI is built as a modern, decoupled SaaS application. The frontend is a Next.js 16 application running React 19, communicating via REST API with a Node.js/Express backend. 
 
----
+### High-Level Architecture Diagram
 
-## 🏗️ Architecture Overview
-
-Cognivio AI is built as a modern, decoupled SaaS application with a clear separation between the client and server:
-
-```
-┌─────────────────────────┐       REST API       ┌─────────────────────────┐
-│                         │ ◄──────────────────►  │                         │
-│     Next.js Frontend    │                       │   Express.js Backend    │
-│     (React 19 / TS)     │                       │   (Node.js API)         │
-│                         │                       │                         │
-└────────────┬────────────┘                       └────────────┬────────────┘
-             │                                                 │
-             │                                    ┌────────────┴────────────┐
-             │                                    │                         │
-             │                                    │     MongoDB Atlas       │
-             │                                    │     (Data Layer)        │
-             │                                    │                         │
-             │                                    └─────────────────────────┘
-             │
-    ┌────────┴─────────────────────────────────────────────────┐
-    │                    Third-Party Services                   │
-    │                                                          │
-    │  Google Gemini · ElevenLabs · Vapi · Cloudinary          │
-    │  LemonSqueezy · Google OAuth · Nodemailer                │
-    └──────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    Client[Next.js Client Area<br>React 19 / Tailwind 4]
+    API[Express.js API Server<br>Node.js]
+    DB[(MongoDB Atlas<br>Vector Store / User Data)]
+    
+    Client <-->|REST API / JSON| API
+    API <-->|Mongoose / Langchain| DB
+    
+    subgraph Third-Party AI & Media Services
+        Gemini[Google Gemini / LLMs]
+        ElevenLabs[ElevenLabs Voice API]
+        Remotion[Remotion / Puppeteer Video Rendering]
+        Cloudinary[Cloudinary CDN]
+        Vapi[Vapi Real-time Voice]
+    end
+    
+    API <-->|Text/Prompts| Gemini
+    API <-->|Text-to-Speech| ElevenLabs
+    API <-->|Render Video| Remotion
+    API <-->|Upload Media| Cloudinary
+    Client <-->|WebRTC Voice Chat| Vapi
 ```
 
-### Frontend
+---
 
-- **Next.js 16** with App Router and React 19
-- **TypeScript** for type safety across the entire codebase
-- **Tailwind CSS 4** + **Radix UI** for a polished, accessible component system
-- **Framer Motion** for smooth animations and micro-interactions
-- Modular service layer for clean API communication
+## 🛠️ Complete Tech Stack
 
-### Backend
+### Frontend (Client)
+- **Framework**: Next.js 16 (App Router)
+- **UI Library**: React 19
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4, Radix UI, framer-motion, clsx, tailwind-merge
+- **State & Data Handling**: react-hook-form, axios
+- **Markdown & Math**: react-markdown, remark-gfm, remark-math, rehype-katex, katex
+- **PDF Rendering**: react-pdf
+- **Authentication**: @react-oauth/google, jwt-decode
+- **Payments**: @paddle/paddle-js
+- **Voice Agent**: @vapi-ai/web
 
-- **Express 5** REST API with modular controller/route architecture
-- **MongoDB** with Mongoose ODM for flexible data modeling
-- **JWT + Google OAuth** authentication with secure session management
-- Production-grade security: Helmet, HPP, CORS, rate limiting
-- **AI Pipeline**: Google Gemini for content generation, ElevenLabs for voice synthesis, Puppeteer + FFmpeg for video rendering
-- **LemonSqueezy** integration for subscription lifecycle and webhook processing
+### Backend (Server)
+- **Core**: Node.js, Express 5
+- **Language**: TypeScript
+- **Database**: MongoDB with Mongoose ODM
+- **AI & RAG Pipeline**: 
+  - @google/genai, @google/generative-ai, openai
+  - langchain, @langchain/mongodb, @langchain/textsplitters
+  - @llamaindex/llama-cloud
+- **Video & Audio Generation**:
+  - remotion, @remotion/renderer, @remotion/bundler
+  - @elevenlabs/elevenlabs-js
+  - puppeteer, puppeteer-extra, puppeteer-screen-recorder
+  - fluent-ffmpeg
+- **Document Parsing & File Processing**: LlamaParse (@llamaindex/llama-cloud), multer, cloudinary, pdf-parse
+- **Security & Auth**: passport, passport-google-oauth20, bcryptjs, jsonwebtoken, helmet, express-rate-limit, express-mongo-sanitize, hpp
+- **Payments & Emails**: @paddle/paddle-node-sdk, @lemonsqueezy/lemonsqueezy.js, resend
 
 ---
 
-## 🔐 Security & Infrastructure
+## ⚙️ Core Processing Flows
 
-- **Authentication**: Email/password with OTP verification + Google OAuth
-- **Authorization**: JWT-based protected API layer
-- **Data Security**: Encrypted credentials, secure cookie-based sessions
-- **API Protection**: Rate limiting, CORS enforcement, input validation (Joi)
-- **Media Pipeline**: Cloudinary CDN for asset delivery, server-side media processing
-- **Payments**: PCI-compliant billing via LemonSqueezy with webhook verification
+### 1. Document Processing & RAG (Retrieval-Augmented Generation)
 
----
+When a user uploads a PDF or document, the system orchestrates a pipeline to parse, chunk, embed, and store the text for contextual AI queries.
 
-## 🎯 Engineering Highlights
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant C as Next.js Client
+    participant A as Express API
+    participant LP as LlamaParse
+    participant LC as LangChain/TextSplitter
+    participant G as Gemini Embeddings
+    participant DB as MongoDB Vector Store
 
-- **Full-Stack TypeScript/JavaScript** — Unified language across frontend and backend
-- **AI-First Architecture** — Deep integration with multiple AI providers for content generation, voice synthesis, and video creation
-- **Real-Time Voice AI** — Live conversational learning powered by Vapi workflow orchestration
-- **Automated Media Pipeline** — Server-side audio/video generation using ElevenLabs, Puppeteer, and FFmpeg
-- **Production-Ready SaaS** — Complete subscription billing, user management, and webhook infrastructure
-- **Modular Codebase** — Clean separation of concerns with dedicated controllers, services, models, and middleware layers
-- **Responsive & Accessible** — Mobile-first design with Radix UI primitives and WCAG-conscious component patterns
-
----
-
-## 📈 Product Tiers
-
-| Plan | Features |
-|---|---|
-| **Free** | Limited document uploads, basic AI summaries |
-| **Plus** | Extended uploads, flashcards, quizzes |
-| **Pro** | Full access including voice/podcast/video overviews |
-| **Premium** | Unlimited usage across all features |
-
----
-
-## 🛠️ Tech Stack at a Glance
-
-| Layer | Technologies |
-|---|---|
-| **Frontend** | Next.js 16, React 19, TypeScript, Tailwind CSS 4, Radix UI, Framer Motion |
-| **Backend** | Node.js, Express 5, MongoDB, Mongoose, JWT, Passport |
-| **AI & Media** | Google Gemini, ElevenLabs, Vapi, Puppeteer, FFmpeg |
-| **Infrastructure** | Cloudinary, LemonSqueezy, Nodemailer, Google OAuth |
-
----
-
-## 📂 Repository Structure
-
-This project is organized as a monorepo with Git submodules:
-
-```
-CognivioAI/
-├── frontend/          → Next.js client application
-├── server/            → Express.js API server
-└── README.md          → You are here
+    U->>C: Upload PDF / Document
+    C->>A: POST /api/documents (File)
+    A->>LP: Extract Text & Structure (LlamaParse API)
+    LP-->>A: Parsed Markdown / Text
+    A->>LC: Chunk text (RecursiveCharacterTextSplitter)
+    LC->>G: Request Embeddings for chunks
+    G-->>LC: Return Vector Embeddings
+    LC->>DB: Store chunks & vectors (Atlas Vector Search)
+    A-->>C: Document Processed Successfully
 ```
 
-Each submodule has its own dedicated README with additional details about its architecture and responsibilities.
+**Chatting with Documents (Contextual Q&A)**:
+When the user asks a question, the query is embedded, matched against the vector store to fetch relevant chunks, and sent to the LLM (Gemini) alongside the user's prompt to generate a grounded answer.
+
+### 2. Quiz & Flashcard Generation
+
+The AI autonomously creates study materials from the extracted document context.
+
+```mermaid
+flowchart LR
+    Doc[Document Text Chunks] --> Prompt[System Prompt:<br>'Generate 10 MCQs and Flashcards']
+    Prompt --> LLM[Google Gemini LLM]
+    LLM --> JSON[Structured JSON Output<br>Q&A Pairs]
+    JSON --> DB[(MongoDB<br>Quizzes & Flashcards)]
+    DB --> Client[Frontend UI<br>Interactive Study Mode]
+```
+
+### 3. Video Overview Generation
+
+One of the most advanced features is generating complete, narrated video recaps of documents entirely on the backend.
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as Express API
+    participant G as Gemini
+    participant E as ElevenLabs
+    participant R as Remotion / Puppeteer
+    participant CDN as Cloudinary
+
+    C->>A: Request Video Overview
+    A->>G: Generate Video Script & Visual Prompts from Document
+    G-->>A: JSON Script (Dialogue + Visual Cues)
+    A->>E: Convert Dialogue to Speech (TTS)
+    E-->>A: Audio File (.mp3)
+    A->>R: Trigger Headless Browser Render<br>(Inject Audio + Visuals via Remotion)
+    R-->>A: Rendered Video (.mp4)
+    A->>CDN: Upload Video File
+    CDN-->>A: Video URL
+    A-->>C: Return Video URL & Save to User Profile
+```
+
+### 4. Real-time Voice Chat (AI Tutor)
+
+Users can have conversational voice calls with the AI about their documents.
+
+```mermaid
+graph TD
+    User((User)) <-->|WebRTC Audio| Vapi[Vapi.ai Voice Orchestrator]
+    Vapi <-->|Function Calling / Context| API[Cognivio Backend API]
+    API <-->|Fetch RAG Context| DB[(MongoDB Vector Store)]
+```
 
 ---
+
+## 🔐 Security & Authentication
+
+- **User Auth**: JWT-based authentication combined with Google OAuth 2.0 (via Passport).
+- **Session Protection**: Rate limiting, HTTP Parameter Pollution (HPP) protection, MongoDB Query Sanitization, and Helmet for secure headers.
+- **Validation**: Strict input validation using Zod and Joi.
+
 
 ## License
 
@@ -154,4 +177,4 @@ This is proprietary software. All rights reserved.
 
 This codebase is **not open source** and is not licensed for redistribution, modification, or commercial use. The source code is published for portfolio and demonstration purposes only.
 
-© 2025 Cognivio AI. All rights reserved.
+© 2026 Cognivio AI. All rights reserved.
